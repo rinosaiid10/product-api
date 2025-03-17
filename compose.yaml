@@ -1,4 +1,4 @@
-# Use postgres/example user/password credentials
+# Utilisation des identifiants par défaut pour PostgreSQL et Adminer
 services:
   postgres:
     image: postgres
@@ -16,4 +16,20 @@ services:
     container_name: adminer
     restart: always
     ports:
-      - 8085:8080
+      - '8085:8080'
+
+  product-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: product-container
+    restart: always
+    ports:
+      - '8081:8082'
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/products_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - postgres
